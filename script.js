@@ -1,6 +1,8 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
-
+var letters = "abcdefghijklmnopqrstuvwxyz";
+var numbers = "0123456789";
+var passwordLength;
 // Write password to the #password input
 function writePassword(password) {
   //var password = generatePassword();
@@ -8,61 +10,75 @@ function writePassword(password) {
 
   passwordText.value = password;
 }
-// this will determine how long the password is going to be. 
+// this will determine how long the password is going to be.
 function promptpasswordLength() {
-  var passwordLength = prompt(
-    "How many character do you want in your password"
+  passwordLength = parseInt(
+    prompt("How many character do you want in your password")
   );
-
-  //makes sure the condition is met before we move foward. 
-  while (passwordLength <= 8 || passwordLength >= 128) {
+  console.log(typeof passwordLength);
+  //makes sure the condition is met before we move foward.
+  if (passwordLength < 8 || passwordLength > 128) {
     alert("please enter a vlaue between 8 and 128");
     passwordLength = prompt("How many character do you want in your password");
   }
-  return passwordLength;
-};
+  
+}
 
-
-//set variables that we we used for the password 
+//set variables that we we used for the password
 function getRandomLowercase() {
-  return "abcdefghijklmnopqrstuvwxyz";
+  return letters[Math.floor(Math.random() * letters.length)];
 }
 function getRandomUppercase() {
-  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return letters[Math.floor(Math.random() * letters.length)].toUpperCase();
 }
 function randomNumber() {
-  return "1234567890";
+  return parseInt(numbers[Math.floor(Math.random() * numbers.length)]);
 }
 function randomSymbols() {
   var symbols = "!@#$%^&*()";
-  return symbols;
-};
+  return symbols[Math.floor(Math.random() * symbols.length)];
+}
 
-
-// collects the  differest aspects to "characters" and store this in a string. if any of these are selected then it takes that string and consideres it in the fucntion later. 
+// collects the  differest aspects to "characters" and store this in a string. if any of these are selected then it takes that string and consideres it in the fucntion later.
 function getCharacters(uppercase, lowercase, number, symbols) {
   var string = "";
-  if (uppercase) {
-    string += getRandomUppercase();
-  }
+  console.log(passwordLength)
+  for (i = 0; i < passwordLength;) {
+    if (uppercase) {
+      string += getRandomUppercase();
+      i++
+      if (passwordLength === i) {
+        break;
+      }
+    }
 
-  if (lowercase) {
-    string += getRandomLowercase();
+    if (lowercase) {
+      string += getRandomLowercase();
+      i++
+      if (passwordLength === i) {
+        break;
+      }
+    }
+    if (symbols) {
+      string += randomSymbols();
+      i++
+      if (passwordLength === i) {
+        break;
+      }
+    }
+    if (number) {
+      string += randomNumber();
+      i++
+      if (passwordLength === i) {
+        break;
+      }
+    }
   }
-
-  if (symbols) {
-    string += randomSymbols();
-  }
-
-  if (number) {
-    string += randomNumber();
-  }
-
-  return string
-};
+  return string;
+}
 
 function generatePassword() {
-  var passwordLength = promptpasswordLength();
+ promptpasswordLength();
   var uppercase = confirm("do you want uppercase letters?");
   var lowercase = confirm("do you want lowercase letters?");
   var symbols = confirm("do you want symbols?");
@@ -74,15 +90,9 @@ function generatePassword() {
     var number = confirm("do you want numbers?");
   }
   var passwordCharacters = getCharacters(uppercase, lowercase, number, symbols);
-  let generatedPassword = "";
-  for (var i = 0; i < passwordLength; i++) {
-    generatedPassword += passwordCharacters[Math.floor(Math.random() * passwordCharacters.length)];
-  }
-  writePassword(generatedPassword);
-};
 
-
-
+  writePassword(passwordCharacters);
+}
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", generatePassword);
